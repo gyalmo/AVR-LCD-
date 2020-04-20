@@ -1,69 +1,65 @@
-#include <avr/io.h>        /* Include AVR std. library file */
-#include <util/delay.h>      /* Include inbuilt defined Delay header file */ 
-#define LCD_Data_Dir DDRB    /* Define LCD data port direction */
-#define LCD_Command_Dir DDRC   /* Define LCD command port direction register */
-#define LCD_Data_Port PORTB     /* Define LCD data port */
-#define LCD_Command_Port PORTC   /* Define LCD data port */
-#define RS PC0     /* Define Register Select (data/command reg.)pin */
-#define RW PC1   /* Define Read/Write signal pin */
-#define EN PC2   /* Define Enable signal pin */
+#include <avr/io.h>                                                      
+#include <util/delay.h>                                                  
+#define LCD_Data_Dir DDRB                                               
+#define LCD_Command_Dir DDRC                                           
+#define LCD_Data_Port PORTB                                          
+#define LCD_Command_Port PORTC                                         
+#define RS PC0     
+#define RW PC1   
+#define EN PC2   
 void LCD_Command  (unsigned char cmnd)
 {         
-          LCD_Data_Port= cmnd;
-    LCD_Command_Port &= ~(1<<RS);             /* RS=0 command reg. */
-    LCD_Command_Port &= ~(1<<RW);           /* RW=0 Write operation */
-    LCD_Command_Port |= (1<<EN);              /* Enable pulse */
+    LCD_Data_Port= cmnd;
+    LCD_Command_Port &= ~(1<<RS);           
+    LCD_Command_Port &= ~(1<<RW);           
+    LCD_Command_Port |= (1<<EN);             
     _delay_us(1);
     LCD_Command_Port &= ~(1<<EN);
     _delay_ms(3);
 }
- void LCD_Char (unsigned char char_data)   /* LCD data write function */
+ void LCD_Char (unsigned char char_data)  
 {
     LCD_Data_Port= char_data;
-    LCD_Command_Port |= (1<<RS);              /* RS=1 Data reg. */
-    LCD_Command_Port &= ~(1<<RW);       /* RW=0 write operation */
-    LCD_Command_Port |= (1<<EN);             /* Enable Pulse */
+    LCD_Command_Port |= (1<<RS);              
+    LCD_Command_Port &= ~(1<<RW);       
+    LCD_Command_Port |= (1<<EN);             
     _delay_us(1);
     LCD_Command_Port &= ~(1<<EN);
     _delay_ms(1);
 }
- void LCD_String (char *str)   /* Send string to LCD function */
+ void LCD_String (char *str)  
 {
     int i;
-    for(i=0;str[i]!=0;i++)          /* Send each char of string till the NULL */
+    for(i=0;str[i]!=0;i++)      
     {
         LCD_Char (str[i]);
     }
 }
  void LCD_String_xy (char row, char pos, char *str)                                                                                      
-                  /* Send string to LCD with xy position */
+              
 {
     if (row == 0 && pos<16)
     {
         LCD_Command((pos & 0x0F)|0x80);
-    /* Command of first row and required position<16 */
     }
     else if (row == 1 && pos<16)
     {
             
 LCD_Command((pos & 0x0F)|0xC0);      
-                     /* Command of 2ND row and required position<16 */
     }
-     LCD_String(str);        /* Call LCD string function */
+     LCD_String(str);        
 }
  int main()
-{
-             /* Initialize LCD */
-    LCD_Command_Dir = 0xFF;    /* Make LCD command port direction as o/p */
-    LCD_Data_Dir = 0xFF;         /* Make LCD data port direction as o/p */
-    _delay_ms(20);            /* LCD Power ON delay always >15ms */
-    LCD_Command (0x38);      /* Initialization of 16X2 LCD in 8bit mode */
-    LCD_Command (0x0C);        /* Display ON Cursor OFF */
-    LCD_Command (0x06);       /* Auto Increment cursor */
-    LCD_Command (0x01);           /* Clear display */
-/*iNITIALIZE END***/
-     LCD_String_xy(0,3,"WELCOME");   //83rd position
-    LCD_Command(0xC0);        /* Go to 2nd line*/
-    LCD_String_xy(1,5,"TO LPU");    //C5 Position
-     return 0;
+{            
+    LCD_Command_Dir = 0xFF; 
+    LCD_Data_Dir = 0xFF;    
+    _delay_ms(20);          
+    LCD_Command (0x38);     
+    LCD_Command (0x0C);     
+    LCD_Command (0x06);     
+    LCD_Command (0x01);     
+    LCD_String_xy(0,3,"WELCOME");  
+    LCD_Command(0xC0);        
+    LCD_String_xy(1,5,"TO LPU");
+    return 0;
 }
