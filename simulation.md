@@ -8,7 +8,8 @@
 #define RW PC1   
 #define EN PC2   
 void LCD_Command  (unsigned char cmnd)
-{         
+
+{ 
     LCD_Data_Port= cmnd;
     LCD_Command_Port &= ~(1<<RS);           
     LCD_Command_Port &= ~(1<<RW);           
