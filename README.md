@@ -15,3 +15,8 @@ The term LCD stands for liquid crystal display. It is one kind of electronic dis
 - These are obtainable in Blue & Green Backlight
 - It displays a few custom generated characters
 
+### 8-BIT MODE :
+- 8-bit mode uses 8 I/O port pins for data and two or three additional I/O pins for control.
+- 8-bit mode requires only one 8-bit transfer for each instruction and character that is sent to the display.
+- In 8 Bit Mode, character data (8 bit ASCII) and LCD commands are send through data lines D0 – D7 of the LCD.
+
